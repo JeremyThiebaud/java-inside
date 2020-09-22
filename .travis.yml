@@ -4,7 +4,6 @@ jdk: openjdk15
 os:
   - linux
   - osx
-  - windows
 
 script:
   - mvn package
