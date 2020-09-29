@@ -45,13 +45,11 @@ public class JSONPrinter {
 
     public static String toJSON(Record person) {
         return Arrays.stream(person.getClass().getRecordComponents())
-/*              .map(e -> "\"" +
-                        ((e.isAnnotationPresent(JSONProperty.class)) ?
-                            e.getAnnotation(JSONProperty.class).name()
-                        : e.toString())
-*/              .filter(e -> e.isAnnotationPresent(JSONProperty.class))
-                .map(e -> "\"" + e.getAnnotation(JSONProperty.class).name() + "\" : " + intoString(access(e.getAccessor(), person)))
-                .collect(Collectors.joining(", ", "{ ", " }"));
+              .map(e -> "\"" + ((e.isAnnotationPresent(JSONProperty.class)) ?
+                            e.getName().replace('_', '-')
+                        : e.toString()) + "\" : "
+                        + intoString(access(e.getAccessor(), person)))
+              .collect(Collectors.joining(", ", "{ ", " }"));
 
     }
 
