@@ -10,17 +10,16 @@ public class JSONPrinterTest {
     public void toJSON() {
         var person = new Person("John", "Doe");
         assertEquals(
-                IncompleteJSONParser.parse("{\"java.lang.String firstName\" : \"John\", " +
-                "\"java.lang.String lastName\" : \"Doe\"}"),
+                IncompleteJSONParser.parse("{\"first-name\" : \"John\", " +
+                "\"last-name\" : \"Doe\"}"),
                 IncompleteJSONParser.parse(JSONPrinter.toJSON(person)));
         var alien = new Alien(100, "Saturn");
         assertEquals(
-                IncompleteJSONParser.parse("{\"int age\" : 100, " +
-                "\"java.lang.String planet\" : \"Saturn\"}"),
+                IncompleteJSONParser.parse("{\"int age\" : 100, \"planet\" : \"Saturn\"}"),
                 IncompleteJSONParser.parse(JSONPrinter.toJSON(alien)));
     }
 
-    public static record Alien(int age, String planet) {
+    public static record Alien(int age, @JSONProperty() String planet) {
         public Alien {
             if (age < 0) {
                 throw new IllegalArgumentException("negative age");
@@ -29,10 +28,11 @@ public class JSONPrinterTest {
         }
     }
 
-    public static record Person(String firstName, String lastName) {
+    public static record Person(@JSONProperty() String first_name,
+                                @JSONProperty() String last_name) {
         public Person {
-            requireNonNull(firstName);
-            requireNonNull(lastName);
+            requireNonNull(first_name);
+            requireNonNull(last_name);
         }
     }
 }
