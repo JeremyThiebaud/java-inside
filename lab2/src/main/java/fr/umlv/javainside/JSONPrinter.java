@@ -28,9 +28,9 @@ public class JSONPrinter {
 //      """.formatted(alien.age(), alien.planet());
 //    }
 
-    private static Object access(Method accessor, RecordComponent component) {
+    private static Object access(Method accessor, Record record) {
         try {
-            return accessor.invoke(component);
+            return accessor.invoke(record);
         } catch (IllegalAccessException e) {
             throw (IllegalAccessError) new IllegalAccessError().initCause(e);
         } catch (InvocationTargetException e) {
@@ -47,8 +47,8 @@ public class JSONPrinter {
 
     public static String toJSON(Record person) {
         return Arrays.stream(person.getClass().getRecordComponents())
-                .map(e -> e.toString()+" : "+ access(e.getAccessor(), e))
-                .collect(Collectors.joining(","));
+                .map(e -> e.toString()+" : "+ access(e.getAccessor(), person))
+                .collect(Collectors.joining(",\n"));
 
     }
 
