@@ -8,6 +8,15 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 public class JSONPrinter {
+    private static final RecordComponentCache cache = new RecordComponentCache();
+
+    private static class RecordComponentCache extends ClassValue<RecordComponent[]>{
+        @Override
+        protected RecordComponent[] computeValue(Class type) {
+            return type.getRecordComponents();
+        }
+    }
+
 //    public static String toJSON(Person person) {
 //        return """
 //      {
@@ -24,6 +33,7 @@ public class JSONPrinter {
 //        "planet": "%s"
 //      }
 //      """.formatted(alien.age(), alien.planet());
+
 //    }
 
     private static Object access(Method access, Record record) {
@@ -44,7 +54,7 @@ public class JSONPrinter {
     }
 
     public static String toJSON(Record person) {
-        return Arrays.stream(person.getClass().getRecordComponents())
+        return Arrays.stream(cache.get(person.getClass()))
               .map(e -> "\"" + ((e.isAnnotationPresent(JSONProperty.class)) ?
                             e.getName().replace('_', '-')
                         : e.toString()) + "\" : "
@@ -54,9 +64,6 @@ public class JSONPrinter {
     }
 
     private static String intoString(Object object) {
-        if(object instanceof String)
-            return "\""+object+"\"";
-        else
-            return object.toString();
+        return (object instanceof String) ? "\""+object+"\"" : object.toString();
     }
 }
