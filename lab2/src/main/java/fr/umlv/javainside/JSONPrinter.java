@@ -2,11 +2,8 @@ package fr.umlv.javainside;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.RecordComponent;
 import java.lang.reflect.UndeclaredThrowableException;
 import java.util.Arrays;
-import java.util.Objects;
-import java.lang.Class;
 import java.util.stream.Collectors;
 
 public class JSONPrinter {
@@ -50,12 +47,5 @@ public class JSONPrinter {
                 .map(e -> e.toString()+" : "+ access(e.getAccessor(), person))
                 .collect(Collectors.joining(",\n"));
 
-    }
-
-    public static void main(String[] args) {
-        var person = new Person("John", "Doe");
-        System.out.println(toJSON(person));
-        var alien = new Alien(100, "Saturn");
-        System.out.println(toJSON(alien));
     }
 }
