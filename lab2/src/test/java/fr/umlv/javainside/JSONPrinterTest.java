@@ -9,11 +9,15 @@ public class JSONPrinterTest {
     @Test
     public void toJSON() {
         var person = new Person("John", "Doe");
-        assertEquals("java.lang.String firstName : John,\n" +
-                "java.lang.String lastName : Doe", JSONPrinter.toJSON(person));
+        assertEquals(
+                IncompleteJSONParser.parse("{\"java.lang.String firstName\" : \"John\", " +
+                "\"java.lang.String lastName\" : \"Doe\"}"),
+                IncompleteJSONParser.parse(JSONPrinter.toJSON(person)));
         var alien = new Alien(100, "Saturn");
-        assertEquals("int age : 100,\n" +
-                "java.lang.String planet : Saturn", JSONPrinter.toJSON(alien));
+        assertEquals(
+                IncompleteJSONParser.parse("{\"int age\" : 100, " +
+                "\"java.lang.String planet\" : \"Saturn\"}"),
+                IncompleteJSONParser.parse(JSONPrinter.toJSON(alien)));
     }
 
     public static record Alien(int age, String planet) {

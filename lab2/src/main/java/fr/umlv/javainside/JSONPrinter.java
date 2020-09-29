@@ -44,8 +44,15 @@ public class JSONPrinter {
 
     public static String toJSON(Record person) {
         return Arrays.stream(person.getClass().getRecordComponents())
-                .map(e -> e.toString()+" : "+ access(e.getAccessor(), person))
-                .collect(Collectors.joining(",\n"));
+                .map(e -> "\""+e.toString()+"\" : "+ intoString(access(e.getAccessor(), person)))
+                .collect(Collectors.joining(", ", "{ ", " }"));
 
+    }
+
+    private static String intoString(Object object) {
+        if(object instanceof String)
+            return "\""+object+"\"";
+        else
+            return object.toString();
     }
 }
