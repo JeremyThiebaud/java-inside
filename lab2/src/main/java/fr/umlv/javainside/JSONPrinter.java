@@ -2,6 +2,7 @@ package fr.umlv.javainside;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.RecordComponent;
 import java.lang.reflect.UndeclaredThrowableException;
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -25,9 +26,9 @@ public class JSONPrinter {
 //      """.formatted(alien.age(), alien.planet());
 //    }
 
-    private static Object access(Method accessor, Record record) {
+    private static Object access(Method access, Record record) {
         try {
-            return accessor.invoke(record);
+            return access.invoke(record);
         } catch (IllegalAccessException e) {
             throw (IllegalAccessError) new IllegalAccessError().initCause(e);
         } catch (InvocationTargetException e) {
@@ -44,7 +45,12 @@ public class JSONPrinter {
 
     public static String toJSON(Record person) {
         return Arrays.stream(person.getClass().getRecordComponents())
-                .map(e -> "\""+e.toString()+"\" : "+ intoString(access(e.getAccessor(), person)))
+/*              .map(e -> "\"" +
+                        ((e.isAnnotationPresent(JSONProperty.class)) ?
+                            e.getAnnotation(JSONProperty.class).name()
+                        : e.toString())
+*/              .filter(e -> e.isAnnotationPresent(JSONProperty.class))
+                .map(e -> "\"" + e.getAnnotation(JSONProperty.class).name() + "\" : " + intoString(access(e.getAccessor(), person)))
                 .collect(Collectors.joining(", ", "{ ", " }"));
 
     }
