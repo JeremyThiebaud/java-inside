@@ -1,4 +1,4 @@
-package main.java.fr.umlv.javainside;
+package fr.umlv.javainside;
 
 public class JSONPrinter {
     public static String toJSON(Person person) {
