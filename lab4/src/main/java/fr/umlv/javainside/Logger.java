@@ -32,7 +32,6 @@ public interface Logger {
         public static void enable(Class<?> declaringClass, boolean enable) {
             ENABLE_CALLSITES.get(declaringClass).setTarget(MethodHandles.constant(boolean.class, enable));
         }
-
     }
 
     public void log(String message);
@@ -100,5 +99,6 @@ public interface Logger {
                 MethodHandles.empty(MethodType.methodType(void.class, String.class))
         );
         return mh;
+
     }
 }
