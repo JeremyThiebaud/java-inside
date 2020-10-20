@@ -11,10 +11,6 @@ import org.openjdk.jmh.annotations.OutputTimeUnit;
 import org.openjdk.jmh.annotations.Scope;
 import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.annotations.Warmup;
-import org.openjdk.jmh.runner.Runner;
-import org.openjdk.jmh.runner.RunnerException;
-import org.openjdk.jmh.runner.options.Options;
-import org.openjdk.jmh.runner.options.OptionsBuilder;
 
 @Warmup(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
 @Measurement(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
@@ -23,6 +19,16 @@ import org.openjdk.jmh.runner.options.OptionsBuilder;
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
 @State(Scope.Benchmark)
 public class LoggerBenchMark {
+    class Foo {}
+    class DisabledFoo {}
+    final static Logger logger = Logger.of(Foo.class, message -> {/* empty */});
+    final static Logger loggerLambda = Logger.lambdaOf(Foo.class, message -> {/* empty */});
+    final static Logger loggerRecord = Logger.recordOf(Foo.class, message -> {/* empty */});
+    final static Logger loggerDisabled = Logger.lambdaOf(DisabledFoo.class, message -> {/* empty */});
+    static {
+        Logger.Impl.enable(DisabledFoo.class, false);
+    }
+
     @Benchmark
     public void no_op() {
         // empty
@@ -30,6 +36,15 @@ public class LoggerBenchMark {
 
     @Benchmark
     public void simple_logger() {
-        // TODO
+        logger.log("hello");
     }
+
+    @Benchmark
+    public void lambda_logger() { loggerLambda.log("hello"); }
+
+    @Benchmark
+    public void record_logger() { loggerRecord.log("hello"); }
+
+    @Benchmark
+    public void disabled_logger() { loggerDisabled.log("hello"); }
 }
