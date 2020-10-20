@@ -43,12 +43,8 @@ public class LoggerBenchMark {
     public void lambda_logger() { loggerLambda.log("hello"); }
 
     @Benchmark
-    public void record_logger() {
-        loggerRecord.log("hello");
-    }
+    public void record_logger() { loggerRecord.log("hello"); }
 
     @Benchmark
-    public void disabled_logger() {
-        loggerDisabled.log("hello");
-    }
+    public void disabled_logger() { loggerDisabled.log("hello"); }
 }
